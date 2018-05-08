@@ -276,9 +276,8 @@ namespace UnityEngine.Rendering.PostProcessing
             // We also need to force reset the non-jittered projection matrix here as it's not done
             // when ResetProjectionMatrix() is called and will break transparent rendering if TAA
             // is switched off and the FOV or any other camera property changes.
-            m_Camera.ResetProjectionMatrix();
-            m_Camera.nonJitteredProjectionMatrix = m_Camera.projectionMatrix;
-
+            //m_Camera.ResetProjectionMatrix();
+            //m_Camera.nonJitteredProjectionMatrix = m_Camera.projectionMatrix;
 #if !UNITY_SWITCH
             if (m_Camera.stereoEnabled)
             {
@@ -444,16 +443,16 @@ namespace UnityEngine.Rendering.PostProcessing
             if (RuntimeUtilities.scriptableRenderPipelineActive)
                 return;
 
-            if (m_CurrentContext.IsTemporalAntialiasingActive())
-            {
-                m_Camera.ResetProjectionMatrix();
+            //if (m_CurrentContext.IsTemporalAntialiasingActive())
+            //{
+            //    m_Camera.ResetProjectionMatrix();
 
-                if (m_CurrentContext.stereoActive)
-                {
-                    if (RuntimeUtilities.isSinglePassStereoEnabled || m_Camera.stereoActiveEye == Camera.MonoOrStereoscopicEye.Right)
-                        m_Camera.ResetStereoProjectionMatrices();
-                }
-            }
+            //    if (m_CurrentContext.stereoActive)
+            //    {
+            //        if (RuntimeUtilities.isSinglePassStereoEnabled || m_Camera.stereoActiveEye == Camera.MonoOrStereoscopicEye.Right)
+            //            m_Camera.ResetStereoProjectionMatrices();
+            //    }
+            //}
         }
 
         public PostProcessBundle GetBundle<T>()
