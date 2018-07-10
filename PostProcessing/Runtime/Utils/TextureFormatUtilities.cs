@@ -95,8 +95,11 @@ namespace UnityEngine.Rendering.PostProcessing
                     if ((int)format < 0) // Crashes the runtime otherwise (!)
                         continue;
 
-                    bool supported = SystemInfo.SupportsTextureFormat((TextureFormat)format);
-                    s_SupportedTextureFormats.Add((int)format, supported);
+                    try { 
+                        bool supported = SystemInfo.SupportsTextureFormat((TextureFormat)format);
+                        s_SupportedTextureFormats.Add((int)format, supported);
+                    }
+                    catch { }
                 }
             }
         }
