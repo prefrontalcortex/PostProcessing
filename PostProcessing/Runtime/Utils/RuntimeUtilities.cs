@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -34,6 +34,21 @@ namespace UnityEngine.Rendering.PostProcessing
                 return m_WhiteTexture;
             }
         }
+        static Texture3D m_WhiteTexture3D;
+        public static Texture3D whiteTexture3D
+        {
+            get
+            {
+                if (m_WhiteTexture3D == null)
+                {
+                    m_WhiteTexture3D = new Texture3D(1, 1, 1, TextureFormat.ARGB32, false) { name = "White Texture 3D" };
+                    m_WhiteTexture3D.SetPixels(new Color[] { Color.white });
+                    m_WhiteTexture3D.Apply();
+                }
+
+                return m_WhiteTexture3D;
+            }
+        }
 
         static Texture2D m_BlackTexture;
         public static Texture2D blackTexture
@@ -51,6 +66,22 @@ namespace UnityEngine.Rendering.PostProcessing
             }
         }
 
+        static Texture3D m_BlackTexture3D;
+        public static Texture3D blackTexture3D
+        {
+            get
+            {
+                if (m_BlackTexture3D == null)
+                {
+                    m_BlackTexture3D = new Texture3D(1, 1, 1, TextureFormat.ARGB32, false) { name = "Black Texture 3D" };
+                    m_BlackTexture3D.SetPixels(new Color[] { Color.black });
+                    m_BlackTexture3D.Apply();
+                }
+
+                return m_BlackTexture3D;
+            }
+        }
+
         static Texture2D m_TransparentTexture;
         public static Texture2D transparentTexture
         {
@@ -64,6 +95,22 @@ namespace UnityEngine.Rendering.PostProcessing
                 }
 
                 return m_TransparentTexture;
+            }
+        }
+
+        static Texture3D m_TransparentTexture3D;
+        public static Texture3D transparentTexture3D
+        {
+            get
+            {
+                if (m_TransparentTexture3D == null)
+                {
+                    m_TransparentTexture3D = new Texture3D(1, 1, 1, TextureFormat.ARGB32, false) { name = "Transparent Texture 3D" };
+                    m_TransparentTexture3D.SetPixels(new Color[] { Color.clear });
+                    m_TransparentTexture3D.Apply();
+                }
+
+                return m_TransparentTexture3D;
             }
         }
 
@@ -452,12 +499,29 @@ namespace UnityEngine.Rendering.PostProcessing
             Destroy(profile);
         }
 
-        public static void DestroyVolume(PostProcessVolume volume, bool destroySharedProfile)
+        public static void DestroyVolume(PostProcessVolume volume, bool destroyProfile, bool destroyGameObject = false)
         {
-            if (destroySharedProfile)
-                DestroyProfile(volume.sharedProfile, true);
+            if (destroyProfile)
+                DestroyProfile(volume.profileRef, true);
 
+            var gameObject = volume.gameObject;
             Destroy(volume);
+
+            if (destroyGameObject)
+                Destroy(gameObject);
+        }
+
+        public static bool IsPostProcessingActive(PostProcessLayer layer)
+        {
+            return layer != null
+                && layer.enabled;
+        }
+
+        public static bool IsTemporalAntialiasingActive(PostProcessLayer layer)
+        {
+            return IsPostProcessingActive(layer)
+                && layer.antialiasingMode == PostProcessLayer.Antialiasing.TemporalAntialiasing
+                && layer.temporalAntialiasing.IsSupported();
         }
 
         // Returns ALL scene objects in the hierarchy, included inactive objects
